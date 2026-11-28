@@ -42,6 +42,7 @@ router.post('/register',[
     body('name', "Username should be at least 4 characters.").isLength({ min: 4 }),
     body('password', "Password Should Be At Least 8 Characters.").isLength({ min: 8 }),
     body('phone', "Phone Number Should Be 10 Digits.").isLength({ min: 10 }),
+    body('role', "Please select a valid role").isIn(['Patient', 'Doctor']),
 ], async (req, res) => {
 
     const error = validationResult(req);
@@ -57,12 +58,13 @@ router.post('/register',[
 
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(req.body.password, salt);
-        
+
         const newUser =  await UserSchema.create({
             email: req.body.email,
             name: req.body.name,
             password: hash,
             phone: req.body.phone,
+            role: req.body.role,
             createdAt: Date(),
         });
 
@@ -91,7 +93,7 @@ router.post('/login', [
     }
 
     try {
-      
+     
         const theUser = await UserSchema.findOne({ email: req.body.email }); // <-- Change req.body.username to req.body.name
             // console.log('my',theUser.name);
         // req.session.name=theUser.name
@@ -119,8 +121,9 @@ router.post('/login', [
         console.error(error);
         return res.status(500).send("Internal Server Error");
     }
-});
 
+
+});
 
 router.put('/update', [
 ], async (req, res) => {
@@ -164,12 +167,12 @@ router.get('/user', async (req, res) => {
         if (!email) {
             return res.status(400).json({ error: "Email not found in the request headers" });
         }
-    
+   
         const user = await UserSchema.findOne({ email });
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
-    
+
         // Send only the necessary user details to the client
         const userDetails = {
             id: user.id,
@@ -180,7 +183,7 @@ router.get('/user', async (req, res) => {
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         };
-    
+
         res.json(userDetails);
         } catch (error) {
         console.error(error);
@@ -190,42 +193,41 @@ router.get('/user', async (req, res) => {
 router.put('/user', [
     body('name', "Username should be at least 4 characters").isLength({ min: 4 }),
     body('phone', "Phone number should be 10 digits").isLength({ min: 10 }),
-    ], async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-        }
-    
-        try {
-        const email = req.headers.email; // Extract the email from the request headers
-    
-        if (!email) {
-            return res.status(400).json({ error: "Email not found in the request headers" });
-        }
-    
-        const existingUser = await UserSchema.findOne({ email });
-        if (!existingUser) {
-            return res.status(404).json({ error: "User not found" });
-        }
-    
-        existingUser.name = req.body.name;
-        existingUser.phone = req.body.phone;
-        existingUser.updatedAt = Date();
-    
-        const updatedUser = await existingUser.save();
-    
-        const payload = {
-            user: {
-            id: updatedUser.id,
-            },
-        };
-    
-        const authtoken = jwt.sign(payload, JWT_SECRET);
-        res.json({ authtoken });
-        } catch (error) {
-        console.error(error);
-        return res.status(500).send("Internal Server Error");
-        }
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+    const email = req.headers.email; // Extract the email from the request headers
+
+    if (!email) {
+        return res.status(400).json({ error: "Email not found in the request headers" });
+    }
+
+    const existingUser = await UserSchema.findOne({ email });
+    if (!existingUser) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    existingUser.name = req.body.name;
+    existingUser.phone = req.body.phone;
+    existingUser.updatedAt = Date();
+    const updatedUser = await existingUser.save();
+
+    const payload = {
+        user: {
+        id: updatedUser.id,
+        },
+    };
+
+    const authtoken = jwt.sign(payload, JWT_SECRET);
+    res.json({ authtoken });
+    } catch (error) {
+    console.error(error);
+    return res.status(500).send("Internal Server Error");
+    }
 });
 
 
