@@ -1,173 +1,195 @@
-import React, { useState } from "react";
-import "./ProfileCard.css";
+import React, { useState } from 'react';
+import Button from '../Common/Button';
+import Card from '../Common/Card';
+import '../Profile/Profile.css';
 
-const ProfileCard = ({
-  name,
-  speciality,
-  experience,
-  ratings,
-  image,
-  about,
-  phone,
-  email,
-  className = "",
-  ...rest
-}) => {
+// ProfileCard - User profile display and edit component
+const ProfileCard = () => {
+  const [userProfile, setUserProfile] = useState({
+    name: 'John Doe',
+    email: 'john@example.com',
+    phone: '1234567890',
+    age: 30,
+    bloodGroup: 'O+',
+    address: '123 Main Street, City, Country',
+  });
+
   const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState(name || "");
-  const [editSpeciality, setEditSpeciality] = useState(speciality || "");
-  const [editExperience, setEditExperience] = useState(experience ? String(experience) : "");
-  const [editAbout, setEditAbout] = useState(about || "");
-  const [editPhone, setEditPhone] = useState(phone || "");
-  const [editEmail, setEditEmail] = useState(email || "");
+  const [formData, setFormData] = useState(userProfile);
+  const [showForm, setShowForm] = useState(false);
 
-  const handleSave = () => {
-    // Save the edited values by updating internal state
-    setEditName(name);
-    setEditSpeciality(speciality);
-    setEditExperience(experience ? String(experience) : "");
-    setEditAbout(about);
-    setEditPhone(phone);
-    setEditEmail(email);
-    setIsEditing(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    setShowForm(true);
   };
 
   const handleCancel = () => {
-    setEditName(name || "");
-    setEditSpeciality(speciality || "");
-    setEditExperience(experience ? String(experience) : "");
-    setEditAbout(about || "");
-    setEditPhone(phone || "");
-    setEditEmail(email || "");
     setIsEditing(false);
+    setShowForm(false);
+    setFormData(userProfile);
   };
 
-  const initials = name ? name.split(" ").map((n) => n[0]).join("").toUpperCase() : "DR";
+  const handleSave = () => {
+    setUserProfile(formData);
+    setIsEditing(false);
+    setShowForm(false);
+  };
 
-  if (isEditing) {
-    return (
-      <div className={`profile-card ${className} profile-card--editing`} {...rest}>
-        <div className="profile-card__header">
-          <div className="profile-card__avatar">
-            {image ? (
-              <img src={image} alt={editName} className="profile-card__avatar-img" />
-            ) : (
-              <div className="profile-card__avatar-placeholder">{editName.charAt(0)}</div>
-            )}
-          </div>
-          <div className="profile-card__info">
-            <div className="profile-edit-field">
-              <label>Name</label>
-              <input
-                className="profile-edit-input"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="profile-edit-field">
-              <label>Speciality</label>
-              <input
-                className="profile-edit-input"
-                value={editSpeciality}
-                onChange={(e) => setEditSpeciality(e.target.value)}
-                required
-              />
-            </div>
-            <div className="profile-edit-field">
-              <label>Experience (years)</label>
-              <input
-                className="profile-edit-input"
-                type="number"
-                value={editExperience}
-                onChange={(e) => setEditExperience(e.target.value)}
-              />
-            </div>
-            <div className="profile-edit-field">
-              <label>About</label>
-              <textarea
-                className="profile-edit-input"
-                value={editAbout}
-                onChange={(e) => setEditAbout(e.target.value)}
-                rows="3"
-              />
-            </div>
-            <div className="profile-edit-field">
-              <label>Phone</label>
-              <input
-                className="profile-edit-input"
-                type="tel"
-                value={editPhone}
-                onChange={(e) => setEditPhone(e.target.value)}
-              />
-            </div>
-            <div className="profile-edit-field">
-              <label>Email</label>
-              <input
-                className="profile-edit-input"
-                type="email"
-                value={editEmail}
-                onChange={(e) => setEditEmail(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="profile-card__actions">
-          <button className="profile-btn profile-btn--save" onClick={handleSave}>
-            Save
-          </button>
-          <button className="profile-btn profile-btn--cancel" onClick={handleCancel}>
-            Cancel
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const handleFocus = (e) => {
+    e.target.classList.add('focused');
+  };
+
+  const handleBlur = (e) => {
+    e.target.classList.remove('focused');
+  };
 
   return (
-    <div className={`profile-card ${className}`} {...rest}>
-      <div className="profile-card__header">
-        <div className="profile-card__avatar">
-          {image ? (
-            <img src={image} alt={name} className="profile-card__avatar-img" />
-          ) : (
-            <div className="profile-card__avatar-placeholder">{initials}</div>
-          )}
+    <Card className="profile-card">
+      <div className="profile-header">
+        <div className="profile-avatar">
+          <span>👤</span>
         </div>
-        <div className="profile-card__info">
-          <h3 className="profile-card__name">{name}</h3>
-          <p className="profile-card__speciality">{speciality}</p>
-          <div className="profile-card__meta">
-            {experience && (
-              <span className="profile-card__meta-item">
-                <span aria-hidden="true">&#9881;</span> {experience} years exp.
-              </span>
-            )}
-            {ratings && (
-              <span className="profile-card__meta-item">
-                <span aria-hidden="true">&#9733;</span> {ratings}
-              </span>
-            )}
+        <div className="profile-title">
+          <h2>{userProfile.name}</h2>
+          <p>{userProfile.email}</p>
+        </div>
+        {!isEditing && (
+          <Button variant="primary" onClick={handleEdit}>
+            Edit Profile
+          </Button>
+        )}
+      </div>
+
+      {showForm && isEditing ? (
+        <form className="profile-form">
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="name">Full Name</label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="age">Age</label>
+              <input
+                id="age"
+                type="number"
+                name="age"
+                value={formData.age}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </div>
           </div>
-          {about && <p className="profile-card__about">{about}</p>}
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="phone">Phone</label>
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </div>
+          </div>
+
+          <div className="form-group full-width">
+            <label htmlFor="bloodGroup">Blood Group</label>
+            <select
+              id="bloodGroup"
+              name="bloodGroup"
+              value={formData.bloodGroup}
+              onChange={handleChange}
+            >
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+
+          <div className="form-group full-width">
+            <label htmlFor="address">Full Address</label>
+            <textarea
+              id="address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              rows="3"
+            />
+          </div>
+
+          <div className="form-buttons">
+            <Button variant="secondary" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleSave}>
+              Save Changes
+            </Button>
+          </div>
+        </form>
+      ) : (
+        <div className="profile-details">
+          <div className="detail-row">
+            <span className="detail-label">Email:</span>
+            <span className="detail-value">{userProfile.email}</span>
+          </div>
+          <div className="detail-row">
+            <span className="detail-label">Phone:</span>
+            <span className="detail-value">{userProfile.phone}</span>
+          </div>
+          <div className="detail-row">
+            <span className="detail-label">Age:</span>
+            <span className="detail-value">{userProfile.age}</span>
+          </div>
+          <div className="detail-row">
+            <span className="detail-label">Blood Group:</span>
+            <span className="detail-value">{userProfile.bloodGroup}</span>
+          </div>
+          <div className="detail-row">
+            <span className="detail-label">Address:</span>
+            <span className="detail-value">{userProfile.address}</span>
+          </div>
         </div>
-        <button className="profile-btn-edit" onClick={() => setIsEditing(true)}>
-          Edit
-        </button>
-      </div>
-      <div className="profile-card__contact">
-        {phone && (
-          <a href={`tel:${phone}`} className="profile-card__contact-item">
-            <span aria-hidden="true">&#9742;</span> {phone}
-          </a>
-        )}
-        {email && (
-          <a href={`mailto:${email}`} className="profile-card__contact-item">
-            <span aria-hidden="true">&#9993;</span> {email}
-          </a>
-        )}
-      </div>
-    </div>
+      )}
+    </Card>
   );
 };
 
