@@ -1,77 +1,68 @@
-import React from 'react';
-import Card from '../Common/Card';
-import Button from '../Common/Button';
-import './Appointments.css';
+import React, { useState } from 'react';
+import './DoctorCard.css';
+import AppointmentForm from '../AppointmentForm/AppointmentForm';
+import { useAppointment } from '../../Notification/AppointmentContext';
 
-const DoctorCard = ({ doctor, onSelectDoctor, onCancelAppointment, hasAppointment = false }) => {
-  const renderStars = (rating) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <span key={i} className={i <= Math.round(rating) ? 'star filled' : 'star'}>
-          ★
-        </span>
-      );
-    }
-    return stars;
+const DoctorCard = ({ name, speciality, experience, ratings }) => {
+  const stars = Math.round(Number(ratings));
+  const [showForm, setShowForm] = useState(false);
+  const [booked, setBooked] = useState(null);
+  const { bookAppointment, cancelAppointment } = useAppointment();
+
+  const handleSubmit = (data) => {
+    setBooked(data);
+    setShowForm(false);
+    bookAppointment({ doctor: data.doctorName, date: data.date, time: data.slot });
+  };
+
+  const handleCancel = () => {
+    setBooked(null);
+    cancelAppointment();
   };
 
   return (
-    <Card className="doctor-card" isClickable>
-      {/* Doctor Image */}
-      <div className="doctor-image">
-        <div className="placeholder-image">
-          <span>👨‍⚕️</span>
+    <div className="doctor-card-container">
+      <div className="doctor-card-details-container">
+        <div className="doctor-card-profile-image-container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#aaa" viewBox="0 0 16 16">
+            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+          </svg>
         </div>
-        {!doctor.available && <span className="unavailable-badge">Unavailable</span>}
-      </div>
-
-      {/* Doctor Info */}
-      <div className="doctor-info">
-        <h3 className="doctor-name">{doctor.name}</h3>
-        <p className="doctor-specialty">{doctor.specialty}</p>
-
-        {/* Rating */}
-        <div className="doctor-rating">
-          <div className="stars">{renderStars(doctor.rating)}</div>
-          <span className="rating-value">{doctor.rating}</span>
-          <span className="review-count">({doctor.reviewCount} reviews)</span>
-        </div>
-
-        {/* Bio */}
-        <p className="doctor-bio">{doctor.bio}</p>
-
-        {/* Availability */}
-        <div className="doctor-availability">
-          <span className={`availability-badge ${doctor.available ? 'available' : 'unavailable'}`}>
-            {doctor.available ? '✓ Available' : '✗ Not Available'}
-          </span>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="button-group">
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onSelectDoctor}
-            disabled={!doctor.available}
-            className="book-button"
-          >
-            {doctor.available ? 'Book Appointment' : 'Notify Me'}
-          </Button>
-          {hasAppointment && (
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={onCancelAppointment}
-              className="cancel-button"
-            >
-              Cancel Appointment
-            </Button>
-          )}
+        <div className="doctor-card-details">
+          <div className="doctor-card-detail-name">{name}</div>
+          <div className="doctor-card-detail-speciality">{speciality}</div>
+          <div className="doctor-card-detail-experience">{experience} years experience</div>
+          <div className="doctor-card-detail-consultationfees">
+            Ratings: {[1, 2, 3, 4, 5].map(s => (
+              <span key={s} className={`card-star ${s <= stars ? 'filled' : ''}`}>★</span>
+            ))}
+          </div>
         </div>
       </div>
-    </Card>
+
+      <div className="doctor-card-options-container">
+        {booked ? (
+          <div className="booked-info">
+            <p>✓ Appointment booked for <strong>{booked.date}</strong> at <strong>{booked.slot}</strong></p>
+            <button className="cancel-booking-btn" onClick={handleCancel}>Cancel Appointment</button>
+          </div>
+        ) : (
+          <button className="book-appointment-btn" onClick={() => setShowForm(true)}>
+            <div>Book Appointment</div>
+            <div>No Booking Fee</div>
+          </button>
+        )}
+      </div>
+
+      {showForm && (
+        <AppointmentForm
+          doctorName={name}
+          doctorSpeciality={speciality}
+          onSubmit={handleSubmit}
+          onClose={() => setShowForm(false)}
+        />
+      )}
+    </div>
   );
 };
 
