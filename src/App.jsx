@@ -7,21 +7,24 @@ import BookingConsultation from './components/bookingconsultation';
 import InstantConsultation from './components/InstantConsultationBooking/InstantConsultation';
 import Setauthtoken from './Setauthtoken';
 import PatientReport from './components/PatientReport/PatientReport';
+import Notification from './components/Notification/Notification';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/booking-consultation" element={<BookingConsultation />} />
-        <Route path="/instant-consultation" element={<InstantConsultation />} />
-        <Route path="/patient-report" element={<PatientReport />} />
-        <Route path="/set-authtoken/:authtoken" element={<Setauthtoken />} />
-      </Routes>
+      <Notification>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/booking-consultation" element={<BookingConsultation />} />
+          <Route path="/instant-consultation" element={<InstantConsultation />} />
+          <Route path="/patient-report" element={<PatientReport />} />
+          <Route path="/set-authtoken/:authtoken" element={<Setauthtoken />} />
+        </Routes>
+      </Notification>
     </Router>
   );
 }

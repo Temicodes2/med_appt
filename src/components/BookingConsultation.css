@@ -178,6 +178,24 @@
     color: #aa3bff;
 }
 
+.cancel-btn {
+    padding: 8px 14px;
+    border: 2px solid #dc3545;
+    background: white;
+    color: #dc3545;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    align-self: flex-start;
+    margin-top: 8px;
+}
+
+.cancel-btn:hover {
+    background: #dc3545;
+    color: white;
+}
+
 @media (max-width: 768px) {
     .doctor-header {
         flex-direction: column;

@@ -1,42 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './GiveReviews.css';
 
-const GiveReviews = ({ doctorName, doctorSpeciality, onSubmit }) => {
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+const GiveReviews = ({ doctorName, doctorSpeciality, onSubmit, reviewData }) => {
+  const [rating, setRating] = useState(reviewData?.rating || 0);
+  const [comment, setComment] = useState(reviewData?.comment || '');
+  const [name, setName] = useState(reviewData?.name || '');
+  const [submitted, setSubmitted] = useState(reviewData?.submitted || false);
 
   const stars = [5, 4, 3, 2, 1];
 
+  // Persist review state to localStorage so it survives page reloads
+  useEffect(() => {
+    if (!submitted) {
+      localStorage.setItem(
+        `review-${doctorName}`,
+        JSON.stringify({ name, rating, comment, submitted })
+      );
+    }
+  }, [name, rating, comment, submitted, doctorName]);
+
+  // Load saved review state on mount (Popup mounting evidence)
+  useEffect(() => {
+    const saved = localStorage.getItem(`review-${doctorName}`);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setName(parsed.name || '');
+        setRating(parsed.rating || 0);
+        setComment(parsed.comment || '');
+        setSubmitted(parsed.submitted || false);
+      } catch (e) {
+        console.warn('Failed to load saved review state', e);
+      }
+    }
+  }, [doctorName]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (rating === 0) {
-      alert('Please select a star rating before submitting.');
+    if (!name || rating === 0) {
+      alert('Please enter your name and select a star rating before submitting.');
       return;
     }
-    onSubmit({ doctorName, doctorSpeciality, rating, comment });
+    const reviewPayload = { doctorName, doctorSpeciality, name, rating, comment };
+    onSubmit(reviewPayload);
     setSubmitted(true);
   };
 
+  const isFormValid = name.trim() !== '' && rating > 0;
+
   if (submitted) {
     return (
-      <div className="give-reviews give-reviews--success">
+      <div className="give-reviews give-reviews--success" role="status" aria-live="polite">
         <div className="give-reviews__check">&#10003;</div>
         <h3 className="give-reviews__title">Thank you!</h3>
         <p className="give-reviews__message">
           Your review for <strong>{doctorName}</strong> ({doctorSpeciality}) has been submitted.
+        </p>
+        <p className="give-reviews__review-summary">
+          <strong>Name:</strong> {name} &nbsp;|&nbsp; <strong>Rating:</strong> {rating} star{rating > 1 ? 's' : ''}
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="give-reviews">
+    <form onSubmit={handleSubmit} className="give-reviews" data-testid="give-reviews-popup">
       <div className="give-reviews__header">
         <h3 className="give-reviews__title">Rate your consultation</h3>
         <p className="give-reviews__subtitle">
           Help others choose <strong>{doctorName}</strong> ({doctorSpeciality})
         </p>
+      </div>
+
+      <div className="give-reviews__name-field">
+        <label className="give-reviews__name-label">Your Name</label>
+        <input
+          className="give-reviews__name-input"
+          type="text"
+          placeholder="Enter your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
       </div>
 
       <div className="give-reviews__rating">
@@ -75,7 +120,7 @@ const GiveReviews = ({ doctorName, doctorSpeciality, onSubmit }) => {
         <button type="button" className="give-reviews__btn give-reviews__btn--cancel" onClick={() => setRating(0)}>
           Cancel
         </button>
-        <button type="submit" className="give-reviews__btn give-reviews__btn--submit" disabled={rating === 0}>
+        <button type="submit" className="give-reviews__btn give-reviews__btn--submit" disabled={!isFormValid}>
           Submit Review
         </button>
       </div>
@@ -84,3 +129,4 @@ const GiveReviews = ({ doctorName, doctorSpeciality, onSubmit }) => {
 };
 
 export default GiveReviews;
+

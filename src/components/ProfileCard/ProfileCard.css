@@ -116,6 +116,112 @@
     background: #f4eeff;
 }
 
+/* Edit mode styles */
+.profile-card--editing .profile-card__header {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.profile-card--editing .profile-card__avatar {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 12px auto;
+}
+
+.profile-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.profile-edit-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b6375;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.profile-edit-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.profile-edit-input:focus {
+    outline: 2px solid #aa3bff;
+    border-color: #aa3bff;
+}
+
+.profile-edit-field textarea.profile-edit-input {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.profile-card__actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.profile-btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+}
+
+.profile-btn--save {
+    background: #aa3bff;
+    color: #fff;
+}
+
+.profile-btn--save:hover {
+    background: #8b2ae0;
+}
+
+.profile-btn--cancel {
+    background: #fff;
+    border: 1px solid #e5e4e7;
+    color: #6b6375;
+}
+
+.profile-btn--cancel:hover {
+    background: #f5f5f5;
+}
+
+.profile-btn-edit {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #f4f3ec;
+    border: 1px solid #e5e4e7;
+    color: #08060d;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.profile-btn-edit:hover {
+    background: #e5e4e7;
+}
+
+.profile-card__header {
+    position: relative;
+}
+
 @media (max-width: 480px) {
     .profile-card {
         max-width: 100%;

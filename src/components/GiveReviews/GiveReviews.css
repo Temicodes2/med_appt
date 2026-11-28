@@ -56,6 +56,45 @@
     gap: 10px;
 }
 
+/* Name field styles */
+.give-reviews__name-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.give-reviews__name-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #08060d;
+    margin: 0;
+}
+
+.give-reviews__name-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.give-reviews__name-input:focus {
+    outline: 2px solid #aa3bff;
+    border-color: #aa3bff;
+}
+
+.give-reviews__review-summary {
+    margin: 12px 0 0 0;
+    font-size: 13px;
+    color: #6b6375;
+    background: #f4f3ec;
+    padding: 10px;
+    border-radius: 6px;
+}
+
 .give-reviews__rating-label {
     font-size: 13px;
     font-weight: 600;

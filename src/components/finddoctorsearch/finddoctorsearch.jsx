@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './FindDoctorSearch.css';
 
 const initSpecialties = [
@@ -15,10 +16,13 @@ const FindDoctorSearch = ({ onSearchSelect }) => {
   const [doctorResultHidden, setDoctorResultHidden] = useState(true);
   const [searchDoctor, setSearchDoctor] = useState('');
   const [specialties] = useState(initSpecialties);
+  const navigate = useNavigate();
 
   const handleDoctorSelect = (specialty) => {
     setSearchDoctor(specialty);
     setDoctorResultHidden(true);
+    // Navigate to search-results route with the selected specialty
+    navigate(`/booking-consultation?speciality=${encodeURIComponent(specialty)}`);
     if (onSearchSelect) {
       onSearchSelect(specialty);
     }

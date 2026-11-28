@@ -14,6 +14,12 @@ const DoctorCard = ({ name, speciality, experience, fee, image, about, phone, em
     setShowForm(false);
   };
 
+  const handleCancel = () => {
+    setBooked(false);
+    setReviewSubmitted(false);
+    setShowForm(false);
+  };
+
   const handleReviewSubmit = (reviewData) => {
     setReviewSubmitted(true);
     alert(`Thank you for reviewing Dr. ${name}! Rating: ${reviewData.rating} stars`);
@@ -56,12 +62,20 @@ const DoctorCard = ({ name, speciality, experience, fee, image, about, phone, em
               doctorSpeciality={speciality}
               onSubmit={handleReviewSubmit}
             />
+            <button className="cancel-btn" onClick={handleCancel}>
+              Cancel Appointment
+            </button>
           </>
         )}
         {reviewSubmitted && (
-          <p className="review-thank-you">
-            Thank you for your feedback, Dr. {name}'s profile is now updated with your review.
-          </p>
+          <>
+            <p className="review-thank-you">
+              Thank you for your feedback, Dr. {name}'s profile is now updated with your review.
+            </p>
+            <button className="cancel-btn" onClick={handleCancel}>
+              Cancel Appointment
+            </button>
+          </>
         )}
       </div>
     </div>
