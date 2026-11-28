@@ -1,0 +1,136 @@
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+    border: 1px solid #e5e4e7;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    max-width: 380px;
+    box-sizing: border-box;
+}
+
+.profile-card__header {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.profile-card__avatar {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+}
+
+.profile-card__avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #aa3bff;
+}
+
+.profile-card__avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #e5e4e7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 24px;
+    color: #aa3bff;
+}
+
+.profile-card__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-card__name {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #08060d;
+}
+
+.profile-card__speciality {
+    margin: 0;
+    font-size: 14px;
+    color: #aa3bff;
+    font-weight: 600;
+}
+
+.profile-card__meta {
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+    color: #6b6375;
+}
+
+.profile-card__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.profile-card__about {
+    margin: 0;
+    font-size: 13px;
+    color: #6b6375;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.profile-card__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.profile-card__contact-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #08060d;
+    text-decoration: none;
+    border: 1px solid #e5e4e7;
+    border-radius: 6px;
+    padding: 6px 10px;
+    background: #fafafa;
+    transition: 0.2s;
+}
+
+.profile-card__contact-item:hover {
+    border-color: #aa3bff;
+    background: #f4eeff;
+}
+
+@media (max-width: 480px) {
+    .profile-card {
+        max-width: 100%;
+        padding: 16px;
+    }
+    .profile-card__avatar {
+        width: 70px;
+        height: 70px;
+    }
+    .profile-card__header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .profile-card__meta {
+        justify-content: center;
+    }
+}

@@ -1,0 +1,13 @@
+/* Offset for fixed navbar */
+#root,
+body {
+  padding-top: 80px;
+  box-sizing: border-box;
+}
+
+.navbar + main,
+section,
+.router-outlet {
+  min-height: 60svh;
+}
+
