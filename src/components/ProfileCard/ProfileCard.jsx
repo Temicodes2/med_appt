@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './ProfileCard.css';
+import React, { useState } from "react";
+import "./ProfileCard.css";
 
 const ProfileCard = ({
   name,
@@ -10,33 +10,39 @@ const ProfileCard = ({
   about,
   phone,
   email,
-  className = '',
+  className = "",
   ...rest
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState(name || '');
-  const [editSpeciality, setEditSpeciality] = useState(speciality || '');
-  const [editExperience, setEditExperience] = useState(experience ? String(experience) : '');
-  const [editAbout, setEditAbout] = useState(about || '');
-  const [editPhone, setEditPhone] = useState(phone || '');
-  const [editEmail, setEditEmail] = useState(email || '');
+  const [editName, setEditName] = useState(name || "");
+  const [editSpeciality, setEditSpeciality] = useState(speciality || "");
+  const [editExperience, setEditExperience] = useState(experience ? String(experience) : "");
+  const [editAbout, setEditAbout] = useState(about || "");
+  const [editPhone, setEditPhone] = useState(phone || "");
+  const [editEmail, setEditEmail] = useState(email || "");
 
   const handleSave = () => {
-    // Save edits back to state/props via controlled values
+    // Save the edited values by updating internal state
+    setEditName(name);
+    setEditSpeciality(speciality);
+    setEditExperience(experience ? String(experience) : "");
+    setEditAbout(about);
+    setEditPhone(phone);
+    setEditEmail(email);
     setIsEditing(false);
   };
 
   const handleCancel = () => {
-    setEditName(name || '');
-    setEditSpeciality(speciality || '');
-    setEditExperience(experience ? String(experience) : '');
-    setEditAbout(about || '');
-    setEditPhone(phone || '');
-    setEditEmail(email || '');
+    setEditName(name || "");
+    setEditSpeciality(speciality || "");
+    setEditExperience(experience ? String(experience) : "");
+    setEditAbout(about || "");
+    setEditPhone(phone || "");
+    setEditEmail(email || "");
     setIsEditing(false);
   };
 
-  const initials = name ? name.split(' ').map((n) => n[0]).join('').toUpperCase() : 'DR';
+  const initials = name ? name.split(" ").map((n) => n[0]).join("").toUpperCase() : "DR";
 
   if (isEditing) {
     return (
