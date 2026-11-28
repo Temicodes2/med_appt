@@ -1,6 +1,6 @@
 === cURL Command ===
-curl.exe -s -w "\n=== HTTP Status: %{http_code} ===\n" -X POST http://localhost:8181/api/auth/register -H "Content-Type: application/json" -d @register-payload.json
+curl.exe -s -w "\n=== HTTP Status: %{http_code} ===\n" -X POST http://localhost:8181/api/auth/register -H "Content-Type: application/json" -d '{"email":"testuser@example.com","name":"Test User","password":"password123","phone":"1234567890","role":"Patient"}'
 
 === Output ===
-Internal Server Error
-=== HTTP Status: 500 ===
+{"authtoken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNmIwYWY3NGExNWQ4MGFkZmRkYTIzNDgzIn0sImlhdCI6MTc5NTg4MDc3OH0.SVKY2VV_EHp8juaC0AFJjYvvFl-4TkOeRjbfUz17cdk"}
+=== HTTP Status: 200 ===
