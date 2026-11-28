@@ -6,6 +6,7 @@ import SignUp from './components/SignUp/SignUp';
 import BookingConsultation from './components/bookingconsultation';
 import InstantConsultation from './components/InstantConsultationBooking/InstantConsultation';
 import Setauthtoken from './Setauthtoken';
+import PatientReport from './components/PatientReport/PatientReport';
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/booking-consultation" element={<BookingConsultation />} />
         <Route path="/instant-consultation" element={<InstantConsultation />} />
+        <Route path="/patient-report" element={<PatientReport />} />
         <Route path="/set-authtoken/:authtoken" element={<Setauthtoken />} />
       </Routes>
     </Router>

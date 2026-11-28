@@ -13,7 +13,6 @@ const Navbar = () => {
   }, []);
 
   const handleLogin = () => {
-    // Trigger login via query param so the page can handle it
     window.location.href = '/login';
   };
 
@@ -22,8 +21,6 @@ const Navbar = () => {
     setIsAuthenticated(false);
     window.location.href = '/';
   };
-
-  const isActive = (path) => location.pathname === path;
 
   return (
     <nav className="navbar">
@@ -57,6 +54,9 @@ const Navbar = () => {
         </li>
         {isAuthenticated ? (
           <>
+            <li className="link">
+              <NavLink to="/patient-report" className={({ isActive }) => (isActive ? 'active-link' : '')}>Patient Report</NavLink>
+            </li>
             <li className="link">
               <button className="btn1" onClick={handleLogout}>Logout</button>
             </li>
