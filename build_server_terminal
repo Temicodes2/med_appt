@@ -1,0 +1,12 @@
+=== Starting: creating build folder inside src/server ===
+=== Command: mkdir src/server/build ===
+
+=== Verifying the build folder was created inside src/server ===
+=== Checking if folder exists ===
+True
+
+=== Listing contents of the build folder ===
+
+=== Final status ===
+Does build folder exist inside server folder? 
+SUCCESS: Yes, the build folder exists inside the server folder.
