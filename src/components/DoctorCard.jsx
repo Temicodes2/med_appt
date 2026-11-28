@@ -1,124 +1,77 @@
-import React, { useState, useEffect } from "react";
-import "./BookingConsultation.css";
-import AppointmentForm from "./appointmentform/appointmentform";
-import ProfileCard from "./ProfileCard/ProfileCard";
-import GiveReviews from "./GiveReviews/GiveReviews";
+import React from 'react';
+import Card from '../Common/Card';
+import Button from '../Common/Button';
+import './Appointments.css';
 
-const DoctorCard = ({ name, speciality, experience, fee, image, about, phone, email, ...rest }) => {
-  const [showForm, setShowForm] = useState(false);
-  const [booked, setBooked] = useState(false);
-  const [reviewSubmitted, setReviewSubmitted] = useState(false);
-  const [appointments, setAppointments] = useState([]);
-
-  // Load appointments from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem("doctor_appointments_" + name);
-    if (stored) {
-      try {
-        setAppointments(JSON.parse(stored));
-      } catch (e) {
-        console.warn("Failed to parse appointments from localStorage", e);
-      }
+const DoctorCard = ({ doctor, onSelectDoctor, onCancelAppointment, hasAppointment = false }) => {
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span key={i} className={i <= Math.round(rating) ? 'star filled' : 'star'}>
+          ★
+        </span>
+      );
     }
-  }, [name]);
-
-  // Save appointments to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem(
-      "doctor_appointments_" + name,
-      JSON.stringify(appointments)
-    );
-  }, [appointments, name]);
-
-  const handleBooking = (data) => {
-    setBooked(true);
-    setShowForm(false);
-    // Add new appointment to state
-    const newAppointment = {
-      id: Date.now(),
-      name: name,
-      date: data.appointmentDate,
-      slot: data.selectedSlot,
-      status: "booked",
-    };
-    setAppointments((prev) => [...prev, newAppointment]);
-  };
-
-  const handleCancel = (appointmentId) => {
-    setBooked(false);
-    setReviewSubmitted(false);
-    setShowForm(false);
-    // Remove appointment from localStorage and state
-    setAppointments(
-      appointments.filter((appt) => appt.id !== appointmentId)
-    );
-  };
-
-  const handleReviewSubmit = (reviewData) => {
-    setReviewSubmitted(true);
-    alert(`Thank you for reviewing Dr. ${name}! Rating: ${reviewData.rating} stars`);
+    return stars;
   };
 
   return (
-    <div className="doctorcard" {...rest}>
-      <ProfileCard
-        name={name}
-        speciality={speciality}
-        experience={experience}
-        ratings={fee && fee.split(" ")[0]}
-        image={image}
-        about={about}
-        phone={phone}
-        email={email}
-      />
-      <div className="doctor-actions">
-        {!booked && !reviewSubmitted ? (
-          <>
-            <button className="book-btn" onClick={() => setShowForm(!showForm)}>
-              {showForm ? "Close Form" : "Book Appointment"}
-            </button>
-            {showForm && (
-              <AppointmentForm
-                doctorName={name}
-                doctorSpeciality={speciality}
-                onSubmit={handleBooking}
-              />
-            )}
-          </>
-        ) : null}
-        {booked && !reviewSubmitted && (
-          <>
-            <p className="booking-confirmed">
-              Appointment booked with Dr. {name}! Please leave a review below.
-            </p>
-            <GiveReviews
-              doctorName={name}
-              doctorSpeciality={speciality}
-              onSubmit={handleReviewSubmit}
-            />
-            <button
-              className="cancel-btn"
-              onClick={() => handleCancel(Date.now())}
-            >
-              Cancel Appointment
-            </button>
-          </>
-        )}
-        {reviewSubmitted && (
-          <>
-            <p className="review-thank-you">
-              Thank you for your feedback, Dr. {name}'s profile is now updated with your review.
-            </p>
-            <button
-              className="cancel-btn"
-              onClick={() => handleCancel(Date.now())}
-            >
-              Cancel Appointment
-            </button>
-          </>
-        )}
+    <Card className="doctor-card" isClickable>
+      {/* Doctor Image */}
+      <div className="doctor-image">
+        <div className="placeholder-image">
+          <span>👨‍⚕️</span>
+        </div>
+        {!doctor.available && <span className="unavailable-badge">Unavailable</span>}
       </div>
-    </div>
+
+      {/* Doctor Info */}
+      <div className="doctor-info">
+        <h3 className="doctor-name">{doctor.name}</h3>
+        <p className="doctor-specialty">{doctor.specialty}</p>
+
+        {/* Rating */}
+        <div className="doctor-rating">
+          <div className="stars">{renderStars(doctor.rating)}</div>
+          <span className="rating-value">{doctor.rating}</span>
+          <span className="review-count">({doctor.reviewCount} reviews)</span>
+        </div>
+
+        {/* Bio */}
+        <p className="doctor-bio">{doctor.bio}</p>
+
+        {/* Availability */}
+        <div className="doctor-availability">
+          <span className={`availability-badge ${doctor.available ? 'available' : 'unavailable'}`}>
+            {doctor.available ? '✓ Available' : '✗ Not Available'}
+          </span>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="button-group">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={onSelectDoctor}
+            disabled={!doctor.available}
+            className="book-button"
+          >
+            {doctor.available ? 'Book Appointment' : 'Notify Me'}
+          </Button>
+          {hasAppointment && (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={onCancelAppointment}
+              className="cancel-button"
+            >
+              Cancel Appointment
+            </Button>
+          )}
+        </div>
+      </div>
+    </Card>
   );
 };
 
