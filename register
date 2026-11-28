@@ -1,0 +1,6 @@
+=== cURL Command ===
+curl.exe -s -w "\n=== HTTP Status: %{http_code} ===\n" -X POST http://localhost:8181/api/auth/register -H "Content-Type: application/json" -d @register-payload.json
+
+=== Output ===
+Internal Server Error
+=== HTTP Status: 500 ===
